@@ -1,3 +1,7 @@
-# Налогоплательщики
+# DaData
 
-Ищем информацию о налогоплательщике в ФНС
+Laravel package.
+
+Brings `DaData` data types.
+
+For now supported search for taxpayers only.
