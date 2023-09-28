@@ -2,7 +2,9 @@
 
 namespace Codewiser\Dadata\Taxpayer\Enum;
 
-enum TaxpayerStatus: string
+use Illuminate\Contracts\Support\Arrayable;
+
+enum TaxpayerStatus: string implements Arrayable
 {
     case unknown = 'unknown';
     /**
@@ -40,8 +42,12 @@ enum TaxpayerStatus: string
     public function allowed(): bool
     {
         return match ($this) {
-            self::unknown, self::liquidating, self::active, self::reorganizing => true,
-            self::liquidated, self::bankrupt => false,
+            self::unknown,
+            self::liquidating,
+            self::active,
+            self::bankrupt,
+            self::reorganizing => true,
+            self::liquidated   => false,
         };
     }
 
@@ -57,12 +63,33 @@ enum TaxpayerStatus: string
     public function weight(): int
     {
         return match ($this) {
-            self::active => 0,
+            self::active       => 0,
             self::reorganizing => 1,
-            self::liquidating => 2,
-            self::bankrupt => 3,
-            self::liquidated => 4,
-            self::unknown => PHP_INT_MAX,
+            self::liquidating  => 2,
+            self::bankrupt     => 3,
+            self::liquidated   => 4,
+            self::unknown      => PHP_INT_MAX,
         };
+    }
+
+    public function caption(): string
+    {
+        return match ($this) {
+            self::active       => __('dadata::taxpayer.status.active'),
+            self::reorganizing => __('dadata::taxpayer.status.reorganizing'),
+            self::liquidating  => __('dadata::taxpayer.status.liquidating'),
+            self::bankrupt     => __('dadata::taxpayer.status.bankrupt'),
+            self::liquidated   => __('dadata::taxpayer.status.liquidated'),
+            self::unknown      => __('dadata::taxpayer.status.unknown'),
+        };
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name'    => $this->caption(),
+            'value'   => $this->value,
+            'allowed' => $this->allowed(),
+        ];
     }
 }

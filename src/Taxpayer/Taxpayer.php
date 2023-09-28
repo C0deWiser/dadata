@@ -9,18 +9,18 @@ use Illuminate\Contracts\Support\Arrayable;
 use Stringable;
 
 /**
- * @property integer|null $inn
- * @property integer|null $kpp
- * @property integer|null $ogrn
- * @property integer|null $okato
- * @property integer|null $oktmo
- * @property \DateTime|null $ogrn_date
- * @property TaxpayerType|null $type
- * @property TaxpayerName|null $name
- * @property TaxpayerFio|null $fio
- * @property TaxpayerOpf|null $opf
- * @property TaxpayerState|null $state
- * @property TaxpayerAddress|null $address
+ * @property integer|null $inn Идентификационный номер налогоплательщика
+ * @property integer|null $kpp Код причины постановки на учет
+ * @property integer|null $ogrn Основной государственный регистрационный номер
+ * @property integer|null $okato Общероссийский классификатор объектов административно-территориального деления
+ * @property integer|null $oktmo Общероссийский классификатор территорий муниципальных образований
+ * @property \DateTime|null $ogrn_date Дата постановки на учет
+ * @property TaxpayerType|null $type Тип налогоплательщика
+ * @property TaxpayerName|null $name Название юридического лица
+ * @property TaxpayerFio|null $fio Имя физического лица
+ * @property TaxpayerOpf|null $opf Организационно-правовая форма
+ * @property TaxpayerState|null $state Состояние налогоплательщика
+ * @property TaxpayerAddress|null $address Адрес налогоплательщика
  */
 class Taxpayer extends ArrayBased implements Stringable
 {
