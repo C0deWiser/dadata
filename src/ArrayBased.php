@@ -17,10 +17,6 @@ abstract class ArrayBased implements Arrayable
 
     public function __construct(array $data = [])
     {
-        foreach ($data as $key => $value) {
-            $data[$key] = $this->cast($key, $value);
-        }
-
         $this->data = $data;
     }
 
@@ -54,12 +50,12 @@ abstract class ArrayBased implements Arrayable
 
     public function __get(string $name)
     {
-        return $this->data[$name] ?? null;
+        return $this->cast($name, $this->data[$name] ?? null);
     }
 
     public function __set(string $name, $value): void
     {
-        $this->data[$name] = $this->cast($name, $value);
+        $this->data[$name] = $value;
     }
 
     public function __isset(string $name): bool
@@ -83,5 +79,13 @@ abstract class ArrayBased implements Arrayable
         }
 
         return $data;
+    }
+
+    /**
+     * Get raw data.
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 }
