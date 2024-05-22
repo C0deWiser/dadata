@@ -29,7 +29,8 @@ class DaDataServiceProvider extends ServiceProvider
                 new DadataClient(
                     $app['config']['services.dadata.token'],
                     $app['config']['services.dadata.secret'],
-                )
+                ),
+                cache()->driver()
             ));
 
         $this->app->singleton(TaxpayerServiceContract::class,
