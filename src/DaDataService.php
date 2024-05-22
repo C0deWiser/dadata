@@ -31,4 +31,14 @@ class DaDataService implements TaxpayerServiceContract
 
         return $found->sortByStatus();
     }
+
+    /**
+     * Стандартизация ФИО
+     */
+    public function cleanName(string $name): CleanName
+    {
+        $response = $this->client->clean('name', $name);
+
+        return CleanName::make($response);
+    }
 }
