@@ -3,6 +3,7 @@
 
 namespace Codewiser\Dadata;
 
+use Codewiser\Dadata\Names\CleanName;
 use Codewiser\Dadata\Taxpayer\Contracts\TaxpayerServiceContract;
 use Codewiser\Dadata\Taxpayer\Taxpayer;
 use Codewiser\Dadata\Taxpayer\Taxpayers;
@@ -12,10 +13,18 @@ use Psr\SimpleCache\CacheInterface;
 class DaDataService implements TaxpayerServiceContract
 {
     public function __construct(
-        protected DadataClient $client,
-        protected CacheInterface $cache,
+        readonly public ?DadataClient $client,
+        readonly public ?CacheInterface $cache,
     ) {
         //
+    }
+
+    /**
+     * Check if da-data service is properly configured.
+     */
+    public function enabled(): bool
+    {
+        return (boolean)$this->client;
     }
 
     protected function ttl(): \DateInterval
@@ -23,13 +32,28 @@ class DaDataService implements TaxpayerServiceContract
         return now()->diff(now()->addDay());
     }
 
+    /**
+     * @deprecated
+     */
     public function search(int $inn): Taxpayers
     {
-        $items = $this->cache->get(__METHOD__.$inn);
+        return $this->taxpayer($inn);
+    }
+
+    /**
+     * Поиск по ИНН.
+     */
+    public function taxpayer(int $inn): Taxpayers
+    {
+        if (!$this->enabled()) {
+            throw new \RuntimeException("DaData is not configured");
+        }
+
+        $items = $this->cache?->get(__METHOD__.$inn);
 
         if (!$items) {
             $items = $this->client->findById('party', $inn);
-            $this->cache->set(__METHOD__.$inn, $items, $this->ttl());
+            $this->cache?->set(__METHOD__.$inn, $items, $this->ttl());
         }
 
         $found = new Taxpayers;
@@ -46,11 +70,15 @@ class DaDataService implements TaxpayerServiceContract
      */
     public function cleanName(string $name): CleanName
     {
-        $response = $this->cache->get(__METHOD__.$name);
+        if (!$this->enabled()) {
+            throw new \RuntimeException("DaData is not configured");
+        }
+
+        $response = $this->cache?->get(__METHOD__.$name);
 
         if (!$response) {
             $response = $this->client->clean('name', $name);
-            $this->cache->set(__METHOD__.$name, $response, $this->ttl());
+            $this->cache?->set(__METHOD__.$name, $response, $this->ttl());
         }
 
         return CleanName::make($response);

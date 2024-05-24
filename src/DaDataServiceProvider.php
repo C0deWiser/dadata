@@ -24,14 +24,14 @@ class DaDataServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(DaDataService::class,
-            fn($app) => new DaDataService(
-                new DadataClient(
-                    $app['config']['services.dadata.token'],
-                    $app['config']['services.dadata.secret'],
-                ),
-                cache()->driver()
-            ));
+        $this->app->singleton(DaDataService::class, function ($app) {
+            $token = $app['config']['services.dadata.token'];
+            $secret = $app['config']['services.dadata.secret'];
+
+            $client = $token && $secret ? new DadataClient($token, $secret) : null;
+
+            return new DaDataService($client, cache()->driver());
+        });
 
         $this->app->singleton(TaxpayerServiceContract::class,
             fn($app) => app(DaDataService::class));

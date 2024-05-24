@@ -1,6 +1,8 @@
 <?php
 
-namespace Codewiser\Dadata;
+namespace Codewiser\Dadata\Names;
+
+use Codewiser\Dadata\ArrayBased;
 
 /**
  * @property string $source
@@ -23,13 +25,5 @@ class CleanName extends ArrayBased implements \Stringable
     public function __toString()
     {
         return $this->result ?? '';
-    }
-
-    public function mark(): int
-    {
-        return
-            ($this->name ? 1 : 0) +
-            ($this->patronymic ? 1 : 0) +
-            ($this->surname ? 1 : 0);
     }
 }

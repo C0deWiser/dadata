@@ -6,6 +6,9 @@ namespace Codewiser\Dadata\Taxpayer\Contracts;
 use Codewiser\Dadata\Taxpayer\Taxpayer;
 use Codewiser\Dadata\Taxpayer\Taxpayers;
 
+/**
+ * @deprecated use DaDataService instead.
+ */
 interface TaxpayerServiceContract
 {
     /**
