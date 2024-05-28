@@ -28,7 +28,7 @@ class DaDataServiceProvider extends ServiceProvider
             $token = $app['config']['services.dadata.token'];
             $secret = $app['config']['services.dadata.secret'];
 
-            $client = $token && $secret ? new DadataClient($token, $secret) : null;
+            $client = $token ? new DadataClient($token, $secret) : null;
 
             return new DaDataService($client, cache()->driver());
         });
