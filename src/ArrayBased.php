@@ -28,24 +28,27 @@ abstract class ArrayBased implements Arrayable
 
         $cast = $this->casts[$name] ?? null;
 
-        switch ($cast) {
-            case 'string':
-                return (string)$value;
-            case 'boolean':
-                return (boolean)$value;
-            case 'integer':
-                return (integer)$value;
-            case 'timestamp':
-                return (new \DateTime)->setTimestamp($value / 1000);
-            default:
-                if (enum_exists($cast)) {
-                    return $cast::tryFrom($value);
-                }
-                if (class_exists($cast)) {
-                    return new $cast($value);
-                }
-                return $value;
+        if ($cast) {
+            switch ($cast) {
+                case 'string':
+                    return (string) $value;
+                case 'boolean':
+                    return (boolean) $value;
+                case 'integer':
+                    return (integer) $value;
+                case 'timestamp':
+                    return (new \DateTime)->setTimestamp($value / 1000);
+                default:
+                    if (enum_exists($cast)) {
+                        return $cast::tryFrom($value);
+                    }
+                    if (class_exists($cast)) {
+                        return new $cast($value);
+                    }
+            }
         }
+
+        return $value;
     }
 
     public function __get(string $name)
