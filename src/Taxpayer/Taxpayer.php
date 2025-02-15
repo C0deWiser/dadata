@@ -2,10 +2,9 @@
 
 namespace Codewiser\Dadata\Taxpayer;
 
-use Codewiser\Dadata\Taxpayer\Enum\TaxpayerStatus;
-use Codewiser\Dadata\Taxpayer\Enum\TaxpayerType;
 use Codewiser\Dadata\ArrayBased;
-use Illuminate\Contracts\Support\Arrayable;
+use Codewiser\Dadata\Taxpayer\Enum\TaxpayerType;
+use DateTimeInterface;
 use Stringable;
 
 /**
@@ -14,7 +13,7 @@ use Stringable;
  * @property integer|null $ogrn Основной государственный регистрационный номер
  * @property integer|null $okato Общероссийский классификатор объектов административно-территориального деления
  * @property integer|null $oktmo Общероссийский классификатор территорий муниципальных образований
- * @property \DateTime|null $ogrn_date Дата постановки на учет
+ * @property DateTimeInterface|null $ogrn_date Дата постановки на учет
  * @property TaxpayerType|null $type Тип налогоплательщика
  * @property TaxpayerName|null $name Название юридического лица
  * @property TaxpayerFio|null $fio Имя физического лица

@@ -5,7 +5,7 @@ namespace Codewiser\Dadata\Taxpayer;
 use Illuminate\Support\Collection;
 
 /**
- * @method Taxpayer|null first(callable $callback = null, $default = null)
+ * @extends Collection<Taxpayer>
  */
 class Taxpayers extends Collection
 {

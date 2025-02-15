@@ -2,6 +2,7 @@
 
 namespace Codewiser\Dadata;
 
+use DateTime;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Stringable;
 
@@ -36,8 +37,13 @@ abstract class ArrayBased implements Arrayable
                     return (boolean) $value;
                 case 'integer':
                     return (integer) $value;
+                case 'double':
+                    return (double) $value;
+                case 'float':
+                    return (float) $value;
+                case 'datetime':
                 case 'timestamp':
-                    return (new \DateTime)->setTimestamp($value / 1000);
+                    return (new DateTime)->setTimestamp($value / 1000);
                 default:
                     if (enum_exists($cast)) {
                         return $cast::tryFrom($value);
@@ -76,9 +82,12 @@ abstract class ArrayBased implements Arrayable
         $data = $this->data;
 
         foreach ($data as $key => $value) {
-            $data[$key] = $value instanceof Arrayable ? $value->toArray() : (
-            $value instanceof Stringable ? (string)$value : $value
-            );
+            $data[$key] = $value instanceof Arrayable
+                ? $value->toArray()
+                : ($value instanceof Stringable
+                    ? (string) $value
+                    : $value
+                );
         }
 
         return $data;

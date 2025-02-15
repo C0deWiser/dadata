@@ -24,7 +24,7 @@ class DaDataService implements TaxpayerServiceContract
      */
     public function enabled(): bool
     {
-        return (boolean)$this->client;
+        return (boolean) $this->client;
     }
 
     protected function ttl(): \DateInterval
@@ -56,13 +56,9 @@ class DaDataService implements TaxpayerServiceContract
             $this->cache?->set(__METHOD__.$inn, $items, $this->ttl());
         }
 
-        $found = new Taxpayers;
-
-        foreach ($items as $item) {
-            $found->add(Taxpayer::make($item['data']));
-        }
-
-        return $found->sortByStatus();
+        return Taxpayers::make(
+            array_map(fn($data) => Taxpayer::make($data), $items),
+        )->sortByStatus();
     }
 
     /**
