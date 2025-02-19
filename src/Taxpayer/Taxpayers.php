@@ -5,7 +5,7 @@ namespace Codewiser\Dadata\Taxpayer;
 use Illuminate\Support\Collection;
 
 /**
- * @extends Collection<Taxpayer>
+ * @extends Collection<int,Taxpayer>
  */
 class Taxpayers extends Collection
 {
