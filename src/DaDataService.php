@@ -57,7 +57,7 @@ class DaDataService implements TaxpayerServiceContract
         }
 
         return Taxpayers::make(
-            array_map(fn($data) => Taxpayer::make($data), $items),
+            array_map(fn($data) => Taxpayer::make($data['data']), $items),
         )->sortByStatus();
     }
 
