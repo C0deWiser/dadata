@@ -8,7 +8,9 @@ use Codewiser\Dadata\Taxpayer\Contracts\TaxpayerServiceContract;
 use Codewiser\Dadata\Taxpayer\Taxpayer;
 use Codewiser\Dadata\Taxpayer\Taxpayers;
 use Dadata\DadataClient;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class DaDataService implements TaxpayerServiceContract
 {
@@ -42,18 +44,31 @@ class DaDataService implements TaxpayerServiceContract
 
     /**
      * Поиск по ИНН.
+     *
+     * @param  string  $query ИНН или ОГРН.
+     * @param  array  $params
+     * * count:integer = 10 Количество результатов (максимум — 300).
+     * * kpp:string КПП для поиска по филиалам.
+     * * branch_type:string Головная организация (MAIN) или филиал (BRANCH).
+     * * type:string Юрлицо (LEGAL) или индивидуальный предприниматель (INDIVIDUAL).
+     * * status:array
+     *   * ACTIVE       — действующая
+     *   * LIQUIDATING  — ликвидируется
+     *   * LIQUIDATED   — ликвидирована
+     *   * BANKRUPT     — банкротство
+     *   * REORGANIZING — в процессе присоединения к другому юрлицу
      */
-    public function taxpayer(int $inn): Taxpayers
+    public function taxpayer(string $query, array $params = []): Taxpayers
     {
         if (!$this->enabled()) {
             throw new \RuntimeException("DaData is not configured");
         }
 
-        $items = $this->cache?->get(__METHOD__.$inn);
+        $items = $this->cache?->get(__METHOD__.$query);
 
         if (!$items) {
-            $items = $this->client->findById('party', $inn);
-            $this->cache?->set(__METHOD__.$inn, $items, $this->ttl());
+            $items = $this->client->findById('party', $query);
+            $this->cache?->set(__METHOD__.$query, $items, $this->ttl());
         }
 
         return Taxpayers::make(
