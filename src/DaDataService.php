@@ -64,11 +64,13 @@ class DaDataService implements TaxpayerServiceContract
             throw new \RuntimeException("DaData is not configured");
         }
 
-        $items = $this->cache?->get(__METHOD__.$query);
+        $key = __METHOD__.md5(json_encode(func_get_args()));
+
+        $items = $this->cache?->get($key);
 
         if (!$items) {
             $items = $this->client->findById('party', $query);
-            $this->cache?->set(__METHOD__.$query, $items, $this->ttl());
+            $this->cache?->set($key, $items, $this->ttl());
         }
 
         return Taxpayers::make(
@@ -85,11 +87,13 @@ class DaDataService implements TaxpayerServiceContract
             throw new \RuntimeException("DaData is not configured");
         }
 
-        $response = $this->cache?->get(__METHOD__.$name);
+        $key = __METHOD__.md5(json_encode(func_get_args()));
+
+        $response = $this->cache?->get($key);
 
         if (!$response) {
             $response = $this->client->clean('name', $name);
-            $this->cache?->set(__METHOD__.$name, $response, $this->ttl());
+            $this->cache?->set($key, $response, $this->ttl());
         }
 
         return CleanName::make($response);

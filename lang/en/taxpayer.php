@@ -12,5 +12,10 @@ return [
         'individual' => 'individual',
         'legal' => 'legal',
         'unknown' => 'unknown',
-    ]
+    ],
+    'branch' => [
+        'main' => 'main',
+        'branch' => 'branch',
+        'unknown' => 'unknown',
+    ],
 ];

@@ -17,6 +17,26 @@ Add to `config/services.php`:
 
 ## Usage
 
+### Search for taxpayer
+
+Inject dependency `TaxpayerServiceContract` wherever you need:
+
+```php
+use Codewiser\Dadata\DaDataService;
+use Illuminate\Http\Request;
+
+public function index(Request $request, DaDataService $service)
+{
+    $taxpayer = $service->taxpayer($request->input('inn'))->first();
+    
+    // ....
+    if ($taxpayer) {
+        $organization->taxpayer = $taxpayer;
+        $organization->save();
+    }
+}
+```
+
 ### Taxpayer attribute
 
 You may store `taxpayer` object in a model attribute.
@@ -38,22 +58,12 @@ class Organization extends Model
 }
 ```
 
-### Search for taxpayer
-
-Inject dependency `TaxpayerServiceContract` wherever you need:
+Then you may access to the named attributes:
 
 ```php
-use Codewiser\Dadata\Taxpayer\Contracts\TaxpayerServiceContract;
-use Illuminate\Http\Request;
+/** @var \Codewiser\Dadata\Taxpayer\Taxpayer $taxpayer */
+$taxpayer = $organization->taxpayer;
 
-public function index(Request $request, TaxpayerServiceContract $taxpayers)
-{
-    $taxpayer = $taxpayers->search($request->input('inn'))->first();
-    
-    // ....
-    
-    $organization->taxpayer = $taxpayer;
-    $organization->save();
-}
+$taxpayer->type
 ```
 
