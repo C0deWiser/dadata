@@ -1,25 +1,27 @@
 # DaData
 
-Laravel package.
+DaData api в виде сервиса Laravel. Предоставляет документированные объекты, 
+представляющие ответы DaData.
 
-Brings `DaData` data types.
+В текущей версии содержатся сервисы:
 
-For now supported search for taxpayers only.
+* [организация по ИНН или ОГРН](https://dadata.ru/api/find-party/)
+* [стандартизация ФИО](https://dadata.ru/api/clean/name/)
 
-Add to `config/services.php`:
+Добавьте креды в `config/services.php`:
 
 ```php
 'dadata' => [
-    'token' => env('DADATA_TOKEN'),
+    'token'  => env('DADATA_TOKEN'),
     'secret' => env('DADATA_SECRET'),
 ]
 ```
 
-## Usage
+## Использование
 
-### Search for taxpayer
+Для использования сервиса внедрите класс `DaDataService` куда вам будет нужно.
 
-Inject dependency `TaxpayerServiceContract` wherever you need:
+### Поиск налогоплательщика
 
 ```php
 use Codewiser\Dadata\DaDataService;
@@ -37,9 +39,9 @@ public function index(Request $request, DaDataService $service)
 }
 ```
 
-### Taxpayer attribute
+### Taxpayer атрибут
 
-You may store `taxpayer` object in a model attribute.
+Объект `Taxpayer` можно кастовать в атрибут.
 
 ```php
 use Codewiser\Dadata\Taxpayer\Casts\AsTaxpayer;
