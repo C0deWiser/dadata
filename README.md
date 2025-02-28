@@ -57,13 +57,3 @@ class Organization extends Model
     ];
 }
 ```
-
-Then you may access to the named attributes:
-
-```php
-/** @var \Codewiser\Dadata\Taxpayer\Taxpayer $taxpayer */
-$taxpayer = $organization->taxpayer;
-
-$taxpayer->type
-```
-
