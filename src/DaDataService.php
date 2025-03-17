@@ -30,9 +30,13 @@ class DaDataService implements TaxpayerServiceContract
         return (boolean) $this->client;
     }
 
-    protected function ttl(): \DateInterval
+    protected function ttl(bool $short = false): \DateInterval
     {
-        return now()->diff(now()->addDay());
+        return now()->diff(
+            $short
+                ? now()->addMinutes(5)
+                : now()->addDay()
+        );
     }
 
     /**
@@ -46,7 +50,7 @@ class DaDataService implements TaxpayerServiceContract
     /**
      * Поиск по ИНН.
      *
-     * @param  string  $query ИНН или ОГРН.
+     * @param  string  $query  ИНН или ОГРН.
      * @param  array  $params
      * * count:integer = 10 Количество результатов (максимум — 300).
      * * kpp:string КПП для поиска по филиалам.
@@ -112,7 +116,7 @@ class DaDataService implements TaxpayerServiceContract
 
         if (!$response) {
             $response = $this->client->getDailyStats($date);
-            $this->cache?->set($key, $response, $this->ttl());
+            $this->cache?->set($key, $response, $this->ttl(true));
         }
 
         return DailyStats::make($response);
@@ -130,7 +134,7 @@ class DaDataService implements TaxpayerServiceContract
 
         if (!$response) {
             $response = $this->client->getBalance();
-            $this->cache?->set($key, $response, now()->diff(now()->addMinutes(10)));
+            $this->cache?->set($key, $response, $this->ttl(true));
         }
 
         return $response;
