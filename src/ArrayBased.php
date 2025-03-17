@@ -41,9 +41,12 @@ abstract class ArrayBased implements Arrayable
                     return (double) $value;
                 case 'float':
                     return (float) $value;
+                case 'date':
                 case 'datetime':
                 case 'timestamp':
-                    return (new DateTime)->setTimestamp($value / 1000);
+                    return is_numeric($value)
+                        ? (new DateTime)->setTimestamp($value / 1000)
+                        : new DateTime($value);
                 default:
                     if (enum_exists($cast)) {
                         return $cast::tryFrom($value);

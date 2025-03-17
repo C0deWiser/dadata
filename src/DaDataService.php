@@ -4,6 +4,7 @@
 namespace Codewiser\Dadata;
 
 use Codewiser\Dadata\Names\CleanName;
+use Codewiser\Dadata\Profile\DailyStats;
 use Codewiser\Dadata\Taxpayer\Contracts\TaxpayerServiceContract;
 use Codewiser\Dadata\Taxpayer\Taxpayer;
 use Codewiser\Dadata\Taxpayer\Taxpayers;
@@ -97,5 +98,41 @@ class DaDataService implements TaxpayerServiceContract
         }
 
         return CleanName::make($response);
+    }
+
+    public function getDailyStats($date = null): DailyStats
+    {
+        if (!$this->enabled()) {
+            throw new \RuntimeException("DaData is not configured");
+        }
+
+        $key = __METHOD__.md5(json_encode(func_get_args()));
+
+        $response = $this->cache?->get($key);
+
+        if (!$response) {
+            $response = $this->client->getDailyStats($date);
+            $this->cache?->set($key, $response, $this->ttl());
+        }
+
+        return DailyStats::make($response);
+    }
+
+    public function getBalance(): float
+    {
+        if (!$this->enabled()) {
+            throw new \RuntimeException("DaData is not configured");
+        }
+
+        $key = __METHOD__;
+
+        $response = $this->cache?->get($key);
+
+        if (!$response) {
+            $response = $this->client->getBalance();
+            $this->cache?->set($key, $response, now()->diff(now()->addMinutes(10)));
+        }
+
+        return $response;
     }
 }
