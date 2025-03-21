@@ -53,7 +53,9 @@ enum TaxpayerStatus: string implements Arrayable
 
     public function getSortPriorityAgainst(self $status): int
     {
-        if ($this->weight() == $status->weight()) return 0;
+        if ($this->weight() == $status->weight()) {
+            return 0;
+        }
         return ($this->weight() < $status->weight()) ? -1 : 1;
     }
 
@@ -84,12 +86,25 @@ enum TaxpayerStatus: string implements Arrayable
         };
     }
 
+    public function level(): string
+    {
+        return match ($this) {
+            self::active     => 'success',
+            self::liquidating,
+            self::reorganizing,
+            self::bankrupt   => 'warning',
+            self::liquidated => 'danger',
+            default          => 'secondary',
+        };
+    }
+
     public function toArray(): array
     {
         return [
             'name'    => $this->caption(),
             'value'   => $this->value,
             'allowed' => $this->allowed(),
+            'level'   => $this->level(),
         ];
     }
 }
